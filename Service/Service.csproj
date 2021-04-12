@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HasNoExternalTypeLibrary\HasNoExternalTypeLibrary.csproj" />
+    <ProjectReference Include="..\HasExternalTypeLibrary\HasExternalTypeLibrary.csproj" />
+  </ItemGroup>
+
+  <Target Name="CleanGenerated">
+    <Delete Files="@(Generated)" />
+  </Target>
+  <Target Name="Mapster" AfterTargets="AfterBuild">
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tool restore" />
+
+    <!-- This section works without issue -->
+    <!--
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster model -a &quot;$(TargetDir)HasNoExternalTypeLibrary.dll&quot;" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster extension -a &quot;$(TargetDir)HasNoExternalTypeLibrary.dll&quot;" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster mapper -a &quot;$(TargetDir)HasNoExternalTypeLibrary.dll&quot;" />
+    -->
+
+    <!-- This section still fails even after updating to new version of Mapster.Tool 8.2.0-->
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster model -a &quot;$(TargetDir)HasExternalTypeLibrary.dll&quot;" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster extension -a &quot;$(TargetDir)HasExternalTypeLibrary.dll&quot;" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster mapper -a &quot;$(TargetDir)HasExternalTypeLibrary.dll&quot;" />
+  </Target>
+</Project>
